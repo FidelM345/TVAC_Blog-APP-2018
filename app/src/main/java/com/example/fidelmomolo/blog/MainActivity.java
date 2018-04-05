@@ -151,13 +151,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-     @Override
+  /*  @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
+        firestore.getFirestoreSettings()
+    }
+*/
+    @Override
      public boolean onOptionsItemSelected(MenuItem item) {
 
          if(item.getItemId()==R.id.action_logout){
-             mAuth.signOut();
-
+             finish();
+            // mAuth.signOut();
              sendToLogin();
+
          }
 
         if(item.getItemId()==R.id.action_settings){

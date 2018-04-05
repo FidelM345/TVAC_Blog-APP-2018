@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment {
                     .limit(3);//used for pagination purposes
 
                     //addsnapshot handles real time data
-              firstQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+              firstQuery.addSnapshotListener(getActivity(),new EventListener<QuerySnapshot>() {
                         //the addSnapshot Listener handles data in real time
                         @Override
                         public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {

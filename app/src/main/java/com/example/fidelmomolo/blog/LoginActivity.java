@@ -40,6 +40,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
 
+
+
+
     }
 
 
@@ -47,15 +50,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
 
-         FirebaseUser user = mAuth.getCurrentUser();// getting details of the current user from the authenticator class
+        FirebaseUser user = mAuth.getCurrentUser();// getting details of the current user from the authenticator class
 
         //if the user is logged in it takes him to the main activity
-        if (user!=null){
+        if (user !=null){
 
             Intent intent=new Intent(LoginActivity.this,MainActivity.class);
             startActivity(intent);
             finish();
         }
+
+
 
     }
 
