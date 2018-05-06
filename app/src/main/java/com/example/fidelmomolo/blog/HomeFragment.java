@@ -59,78 +59,7 @@ public class HomeFragment extends Fragment {
 
 
 
-        if(mAuth.getCurrentUser()!=null) {
-            firestore = FirebaseFirestore.getInstance();
 
-            blog_list_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                //listener has been used for pagination
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-
-                    Boolean reachedBottom=!recyclerView.canScrollVertically(1);//positive one means top to bottom direction
-
-                    if (reachedBottom){
-
-                        String description=lastVisible.getString("description");
-                        Toast.makeText(container.getContext(), "Reached"+description, Toast.LENGTH_LONG).show();
-                        loadmorePost();
-                    }
-                }
-            });
-
-            Query firstQuery=firestore.collection("Posts")
-                    .orderBy("timestamp", Query.Direction.DESCENDING)
-                    .limit(3);//used for pagination purposes
-
-                    //addsnapshot handles real time data
-              firstQuery.addSnapshotListener(getActivity(),new EventListener<QuerySnapshot>() {
-                        //the addSnapshot Listener handles data in real time
-                        @Override
-                        public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-
-                            if (isFirstPageLoad) {
-                                //ensures the last data to be added is always at the
-                                //top of the recycler view
-
-                                lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);//pagination
-                            }
-
-                            for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
-
-                        if (documentChange.getType() == DocumentChange.Type.ADDED) {
-
-                            String PostId=documentChange.getDocument().getId();
-
-                            //converts data feteched from firebase into a form similar to the model class created
-                            BlogPost_model_class blogPost_model_class = documentChange.getDocument().toObject(BlogPost_model_class.class).withId(PostId);
-
-
-                            if (isFirstPageLoad) {
-                                bloglist.add(blogPost_model_class); //data added to the List data structure the process is repeated
-                                //Every time new data is received
-                            }
-
-                            else{
-
-                                bloglist.add(0,blogPost_model_class); //ensures the last data to be added is always at the
-                                //top of the recycler view
-                            }
-
-
-                            blogRecycler_adapter.notifyDataSetChanged();//notify adapter when data set is changed
-
-                        }
-
-                    }
-
-                    isFirstPageLoad=false; //just after the first page is loaded set it to false
-
-
-                }
-            });
-
-        }
 
         return view;//returns the inflated view
     }
@@ -181,4 +110,85 @@ public class HomeFragment extends Fragment {
 
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(mAuth.getCurrentUser()!=null) {
+            firestore = FirebaseFirestore.getInstance();
+
+            blog_list_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                //listener has been used for pagination
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                    Boolean reachedBottom=!recyclerView.canScrollVertically(1);//positive one means top to bottom direction
+
+                    if (reachedBottom){
+
+                        String description=lastVisible.getString("description");
+                        Toast.makeText(getActivity(), "Reached"+description, Toast.LENGTH_LONG).show();
+                        loadmorePost();
+                    }
+                }
+            });
+
+            Query firstQuery=firestore.collection("Posts")
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .limit(3);//used for pagination purposes
+
+            //addsnapshot handles real time data
+            firstQuery.addSnapshotListener(getActivity(),new EventListener<QuerySnapshot>() {
+                //the addSnapshot Listener handles data in real time
+                @Override
+                public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+
+                    if (isFirstPageLoad) {
+                        //ensures the last data to be added is always at the
+                        //top of the recycler view
+
+                        lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);//pagination
+                    }
+
+                    for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
+
+                        if (documentChange.getType() == DocumentChange.Type.ADDED) {
+
+                            String PostId=documentChange.getDocument().getId();
+
+                            //converts data feteched from firebase into a form similar to the model class created
+                            BlogPost_model_class blogPost_model_class = documentChange.getDocument().toObject(BlogPost_model_class.class).withId(PostId);
+
+
+                            if (isFirstPageLoad) {
+                                bloglist.add(blogPost_model_class); //data added to the List data structure the process is repeated
+                                //Every time new data is received
+                            }
+
+                            else{
+
+                                bloglist.add(0,blogPost_model_class); //ensures the last data to be added is always at the
+                                //top of the recycler view
+                            }
+
+
+                            blogRecycler_adapter.notifyDataSetChanged();//notify adapter when data set is changed
+
+                        }
+
+                    }
+
+                    isFirstPageLoad=false; //just after the first page is loaded set it to false
+
+
+                }
+            });
+
+        }
+
+
+
+
+    }
 }

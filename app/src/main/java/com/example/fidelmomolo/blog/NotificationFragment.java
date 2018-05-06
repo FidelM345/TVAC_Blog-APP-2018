@@ -15,6 +15,7 @@ public class NotificationFragment extends Fragment {
 
 
     public NotificationFragment() {
+
         // Required empty public constructor
     }
 

@@ -71,9 +71,10 @@ public class BlogRecycler_Adapter extends RecyclerView.Adapter<BlogRecycler_Adap
          String description_data=bloglist.get(position).getDescription();
          String image_url=bloglist.get(position).getImageUri();
          String thumb_uri=bloglist.get(position).getThumbUri();
-         long millisends=bloglist.get(position).getTimestamp().getTime();
-         String dateString= DateFormat.format("MM/dd/yyy",new Date(millisends)).toString();
+         /*long millisends=bloglist.get(position).getTimestamp().getTime();
+         String dateString= DateFormat.format("MM/dd/yyy",new Date(millisends)).toString();*/
 
+         String dateString="14/015/12";
          //likes features
          final String blogpostid=bloglist.get(position).BlogPostIdString;//gets the blog post id
          final String currentUserId=mAuth.getCurrentUser().getUid();
